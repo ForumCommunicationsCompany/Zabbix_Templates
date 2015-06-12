@@ -12,16 +12,14 @@ for futher information, there are a number of scripts and manual configuration s
 * copy the dfsr_discovery.ps1 file to the powershell directory 
 
 * create a scheduled task to run every 6 hours with the command
-  powershell -f "c:\zabbix\dfsr\powershell\dfsr_discovery.ps1  
+  powershell -ExecutionPolicy Bypass -File "c:\zabbix\dfsr\powershell\dfsr_discovery.ps1"
 
 * copy the backlog.ps1 file to the powershell directory
 
 * import the template
 
-* add the following line to the end of the zabbix_agentd.conf file and restart<br/>
-```
- UserParameter=dfsr.backlog[*],powershell -File c:\zabbix\dfsr\powershell\backlog.ps1 -RGName:"$1" -RFName:"$2" -SendingMember:$3 -ReceivingMember:$4
-```
+* create a scheduled task to run whenever you want new datapoints with the command
+  powershell.exe -ExecutionPolicy Bypass -File "C:\zabbix\dfsr\powershell\backlog.ps1"
 
 * if the zabbix agent is running as a service, set it to login as an administrative user, otherwise the powershell
    scripts will not run correctly, and will always return 0
