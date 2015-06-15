@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <zabbix_export>
     <version>2.0</version>
-    <date>2015-06-15T14:51:44Z</date>
+    <date>2015-06-15T16:05:03Z</date>
     <groups>
         <group>
             <name>Templates</name>
@@ -103,7 +103,7 @@
                     </item_prototypes>
                     <trigger_prototypes>
                         <trigger_prototype>
-                            <expression>{Template Microsoft DFSR:dfsr-[{#RFNAME}-{#SMEM}-{#RMEM}].last()}&gt;50</expression>
+                            <expression>{Template Microsoft DFSR:dfsr-[{#RFNAME}-{#SMEM}-{#RMEM}].last()}&gt;50 and {Template Microsoft DFSR:dfsr-[{#RFNAME}-{#SMEM}-{#RMEM}].last()}&lt;101</expression>
                             <name>DFS Backlog &gt; 50 files on {#DFSRNAME}</name>
                             <url/>
                             <status>0</status>
@@ -113,7 +113,7 @@
                         </trigger_prototype>
                         <trigger_prototype>
                             <expression>{Template Microsoft DFSR:dfsr-[{#RFNAME}-{#SMEM}-{#RMEM}].last()}&gt;100</expression>
-                            <name>DFS Backlog &gt; 100 on {#DFSRNAME}</name>
+                            <name>DFS Backlog &gt; 100 files on {#DFSRNAME}</name>
                             <url/>
                             <status>0</status>
                             <priority>3</priority>
