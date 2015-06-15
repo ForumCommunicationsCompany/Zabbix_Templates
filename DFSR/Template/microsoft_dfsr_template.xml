@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <zabbix_export>
     <version>2.0</version>
-    <date>2014-04-02T23:13:05Z</date>
+    <date>2015-06-15T14:51:44Z</date>
     <groups>
         <group>
             <name>Templates</name>
@@ -11,6 +11,7 @@
         <template>
             <template>Template Microsoft DFSR</template>
             <name>Template Microsoft DFSR</name>
+            <description/>
             <groups>
                 <group>
                     <name>Templates</name>
@@ -29,7 +30,7 @@
                     <snmp_community/>
                     <snmp_oid/>
                     <key>system.run[&quot;type c:\zabbix\dfsr\discovery.json&quot;]</key>
-                    <delay>1800</delay>
+                    <delay>60</delay>
                     <status>0</status>
                     <allowed_hosts/>
                     <snmpv3_contextname/>
@@ -48,24 +49,28 @@
                     <publickey/>
                     <privatekey/>
                     <port/>
-                    <filter>:</filter>
+                    <filter>
+                        <evaltype>0</evaltype>
+                        <formula/>
+                        <conditions/>
+                    </filter>
                     <lifetime>2</lifetime>
                     <description/>
                     <item_prototypes>
                         <item_prototype>
                             <name>DFSR backlog - {#DFSRNAME}</name>
-                            <type>0</type>
+                            <type>2</type>
                             <snmp_community/>
                             <multiplier>0</multiplier>
                             <snmp_oid/>
-                            <key>system.run[&quot;powershell.exe -NoProfile -NoLogo -File C:\zabbix\dfsr\powershell\backlog.ps1 -RGName:[{#RGNAME}] -RFName:[{#RFNAME}] -SendingMember:[{#SMEM}] -ReceivingMember:[{#RMEM}]&quot;]</key>
-                            <delay>1800</delay>
+                            <key>dfsr-[{#RFNAME}-{#SMEM}-{#RMEM}]</key>
+                            <delay>0</delay>
                             <history>90</history>
                             <trends>365</trends>
                             <status>0</status>
                             <value_type>3</value_type>
                             <allowed_hosts/>
-                            <units/>
+                            <units>Files</units>
                             <delta>0</delta>
                             <snmpv3_contextname/>
                             <snmpv3_securityname/>
@@ -93,12 +98,13 @@
                                 </application>
                             </applications>
                             <valuemap/>
+                            <logtimefmt/>
                         </item_prototype>
                     </item_prototypes>
                     <trigger_prototypes>
                         <trigger_prototype>
-                            <expression>{Template Microsoft DFSR:system.run[&quot;powershell.exe -NoProfile -NoLogo -File C:\zabbix\dfsr\powershell\backlog.ps1 -RGName:[{#RGNAME}] -RFName:[{#RFNAME}] -SendingMember:[{#SMEM}] -ReceivingMember:[{#RMEM}]&quot;].last()}&gt;50</expression>
-                            <name>DFS Backlog &gt; 50 files</name>
+                            <expression>{Template Microsoft DFSR:dfsr-[{#RFNAME}-{#SMEM}-{#RMEM}].last()}&gt;50</expression>
+                            <name>DFS Backlog &gt; 50 files on {#DFSRNAME}</name>
                             <url/>
                             <status>0</status>
                             <priority>2</priority>
@@ -106,22 +112,85 @@
                             <type>0</type>
                         </trigger_prototype>
                         <trigger_prototype>
-                            <expression>{Template Microsoft DFSR:system.run[&quot;powershell.exe -NoProfile -NoLogo -File C:\zabbix\dfsr\powershell\backlog.ps1 -RGName:[{#RGNAME}] -RFName:[{#RFNAME}] -SendingMember:[{#SMEM}] -ReceivingMember:[{#RMEM}]&quot;].last()}&gt;100</expression>
-                            <name>DFS Backlog &gt; 100</name>
+                            <expression>{Template Microsoft DFSR:dfsr-[{#RFNAME}-{#SMEM}-{#RMEM}].last()}&gt;100</expression>
+                            <name>DFS Backlog &gt; 100 on {#DFSRNAME}</name>
                             <url/>
                             <status>0</status>
-                            <priority>4</priority>
+                            <priority>3</priority>
                             <description>DFS Backlog is &gt; 100 Files</description>
                             <type>0</type>
                         </trigger_prototype>
                     </trigger_prototypes>
-                    <graph_prototypes/>
+                    <graph_prototypes>
+                        <graph_prototype>
+                            <name>DFSR Backlogs {#DFSRNAME}</name>
+                            <width>900</width>
+                            <height>200</height>
+                            <yaxismin>0.0000</yaxismin>
+                            <yaxismax>100.0000</yaxismax>
+                            <show_work_period>1</show_work_period>
+                            <show_triggers>1</show_triggers>
+                            <type>0</type>
+                            <show_legend>1</show_legend>
+                            <show_3d>0</show_3d>
+                            <percent_left>0.0000</percent_left>
+                            <percent_right>0.0000</percent_right>
+                            <ymin_type_1>0</ymin_type_1>
+                            <ymax_type_1>0</ymax_type_1>
+                            <ymin_item_1>0</ymin_item_1>
+                            <ymax_item_1>0</ymax_item_1>
+                            <graph_items>
+                                <graph_item>
+                                    <sortorder>0</sortorder>
+                                    <drawtype>5</drawtype>
+                                    <color>EE0000</color>
+                                    <yaxisside>0</yaxisside>
+                                    <calc_fnc>4</calc_fnc>
+                                    <type>0</type>
+                                    <item>
+                                        <host>Template Microsoft DFSR</host>
+                                        <key>dfsr-[{#RFNAME}-{#SMEM}-{#RMEM}]</key>
+                                    </item>
+                                </graph_item>
+                            </graph_items>
+                        </graph_prototype>
+                    </graph_prototypes>
                     <host_prototypes/>
                 </discovery_rule>
             </discovery_rules>
             <macros/>
             <templates/>
-            <screens/>
+            <screens>
+                <screen>
+                    <name>DFSR Backlog Status</name>
+                    <hsize>1</hsize>
+                    <vsize>1</vsize>
+                    <screen_items>
+                        <screen_item>
+                            <resourcetype>20</resourcetype>
+                            <width>500</width>
+                            <height>100</height>
+                            <x>0</x>
+                            <y>0</y>
+                            <colspan>1</colspan>
+                            <rowspan>1</rowspan>
+                            <elements>0</elements>
+                            <valign>0</valign>
+                            <halign>0</halign>
+                            <style>0</style>
+                            <url/>
+                            <dynamic>0</dynamic>
+                            <sort_triggers>0</sort_triggers>
+                            <resource>
+                                <name>DFSR Backlogs {#DFSRNAME}</name>
+                                <host>Template Microsoft DFSR</host>
+                            </resource>
+                            <max_columns>2</max_columns>
+                            <application/>
+                        </screen_item>
+                    </screen_items>
+                </screen>
+            </screens>
         </template>
     </templates>
 </zabbix_export>
